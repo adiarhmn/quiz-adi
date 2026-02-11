@@ -1,25 +1,6 @@
 import { useEffect, useState } from 'react';
 import Navigations from '@/components/navigations/navigations';
-
-type ApiQuestion = {
-    category: string;
-    type: 'multiple';
-    difficulty: string;
-    question: string;
-    correct_answer: string;
-    incorrect_answers: string[];
-};
-
-type ApiResponse = {
-    response_code: number;
-    results: ApiQuestion[];
-};
-
-type Question = {
-    question: string;
-    options: string[];
-    correctAnswer: string;
-};
+import { fetchQuizQuestions, type Question } from '@/lib/api/quiz';
 
 export default function QuizPage() {
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -30,29 +11,11 @@ export default function QuizPage() {
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
     const [score, setScore] = useState<number>(0);
 
-    const decodeHTML = (html: string): string => {
-        const txt = document.createElement('textarea');
-        txt.innerHTML = html;
-        return txt.value;
-    };
-
     useEffect(() => {
-        const fetchQuestions = async () => {
+        const loadQuestions = async () => {
             try {
-                const res = await fetch('https://opentdb.com/api.php?amount=10&category=21&difficulty=easy&type=multiple');
-                const data: ApiResponse = await res.json();
-
-                const formatted: Question[] = data.results.map((q) => {
-                    const options = [...q.incorrect_answers, q.correct_answer].map(decodeHTML).sort(() => Math.random() - 0.5);
-
-                    return {
-                        question: decodeHTML(q.question),
-                        options,
-                        correctAnswer: decodeHTML(q.correct_answer),
-                    };
-                });
-
-                setQuestions(formatted);
+                const data = await fetchQuizQuestions(10);
+                setQuestions(data);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -60,7 +23,7 @@ export default function QuizPage() {
             }
         };
 
-        fetchQuestions();
+        loadQuestions();
     }, []);
 
     useEffect(() => {
