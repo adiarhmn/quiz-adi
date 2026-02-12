@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { IconWaveSine } from '@tabler/icons-react';
 
 export default function Navigations() {
@@ -7,7 +8,7 @@ export default function Navigations() {
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center gap-1">
-                         <IconWaveSine className="h-8 w-8 text-orange-600" />
+                        <IconWaveSine className="h-8 w-8 text-orange-600" />
                         <span className="text-xl font-bold tracking-tight text-gray-900">QuizSine</span>
                     </div>
 
@@ -26,9 +27,9 @@ export default function Navigations() {
 
                     {/* Right Section */}
                     <div className="flex items-center space-x-4">
-                        <button className="rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-700">
+                        <Link href="/start-quiz" className="rounded-lg bg-orange-600 px-6 py-3 font-medium text-white transition hover:bg-orange-700">
                             Start Quiz
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

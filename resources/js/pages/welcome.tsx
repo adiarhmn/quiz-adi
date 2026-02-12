@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import Navigations from '@/components/navigations/navigations';
 
 export default function Welcome() {
@@ -26,9 +26,9 @@ export default function Welcome() {
                             Empower your organization with our robust quiz and assessment platform, designed to streamline evaluation processes
                         </p>
                         <div className="flex justify-center gap-4">
-                            <button className="rounded-lg bg-orange-600 px-6 py-3 font-medium text-white transition hover:bg-orange-700">
+                            <Link href="/start-quiz" className="rounded-lg bg-orange-600 px-6 py-3 font-medium text-white transition hover:bg-orange-700">
                                 Start Quiz
-                            </button>
+                            </Link>
                             <button className="rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium transition hover:bg-gray-100">
                                 Learn More
                             </button>
@@ -58,7 +58,6 @@ export default function Welcome() {
                     </div>
                 </div>
             </section>
-
 
             <footer className="bg-gray-900 text-gray-400">
                 <div className="mx-auto max-w-6xl px-6 py-12">

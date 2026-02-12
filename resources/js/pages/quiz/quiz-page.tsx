@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import Navigations from '@/components/navigations/navigations';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchQuizQuestions, type Question } from '@/lib/api/quiz';
 
 export default function QuizPage() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [answers, setAnswers] = useState<Record<number, string>>({});
-    const [timeLeft, setTimeLeft] = useState<number>(600);
+    const [timeLeft, setTimeLeft] = useState<number>(100);
     const [loading, setLoading] = useState<boolean>(true);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
     const [score, setScore] = useState<number>(0);
@@ -26,10 +25,12 @@ export default function QuizPage() {
         loadQuestions();
     }, []);
 
+    // Start timer on component mount
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
         }, 1000);
+
         return () => clearInterval(timer);
     }, []);
 
@@ -40,7 +41,10 @@ export default function QuizPage() {
         }));
     };
 
-    const handleSubmit = (): void => {
+    // Calculate score and mark quiz as submitted
+    const handleSubmit = useCallback(() => {
+        if (isSubmitted) return;
+
         let total = 0;
 
         questions.forEach((q, index) => {
@@ -51,7 +55,14 @@ export default function QuizPage() {
 
         setScore(total);
         setIsSubmitted(true);
-    };
+    }, [answers, isSubmitted, questions]);
+
+    // Auto-submit when time runs out
+    useEffect(() => {
+        if (timeLeft === 0 && !isSubmitted && questions.length > 0) {
+            handleSubmit();
+        }
+    }, [timeLeft, isSubmitted, questions, handleSubmit]);
 
     const formatTime = (seconds: number): string => {
         const m = Math.floor(seconds / 60);
@@ -86,7 +97,6 @@ export default function QuizPage() {
 
     return (
         <>
-            <Navigations />
             <div className="min-h-screen bg-gray-50 p-6">
                 <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-4">
                     {/* LEFT - Question */}
